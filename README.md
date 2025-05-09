@@ -12,3 +12,9 @@ drwxr-xr-x  3 root root 4.0K May  8 13:28 mimir
 drwxr-xr-x  3 root root 4.0K May  8 13:30 prometheus
 -rw-r--r--  1 root root   19 May  8 13:31 README.md
 ```
+
+# k9s
+
+```
+wget https://github.com/derailed/k9s/releases/download/v0.50.5/k9s_Linux_amd64.tar.gz
+```
