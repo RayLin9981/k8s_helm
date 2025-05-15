@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+  namespace: keycloak-system
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    # 可選的 SSL 相關註解
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # 將 HTTP 重定向到 HTTPS
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"  # 強制使用 HTTPS
+   # 添加以下註解以正確傳遞協議信息
+    nginx.ingress.kubernetes.io/proxy-set-headers: "true"
+    nginx.ingress.kubernetes.io/proxy-set-header-X-Forwarded-Proto: "$scheme"
+    nginx.ingress.kubernetes.io/proxy-set-header-X-Forwarded-For: "$proxy_add_x_forwarded_for"
+    nginx.ingress.kubernetes.io/proxy-set-header-X-Real-IP: "$remote_addr"
+    nginx.ingress.kubernetes.io/proxy-set-header-Host: "$host"
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: keycloak.fck8slab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: keycloak
+            port:
+              number: 80
+  tls:
+  - hosts:
+    - keycloak.fck8slab.local
+    secretName: tls-keycloak-ingress
