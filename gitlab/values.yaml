@@ -51,7 +51,7 @@ global:
   edition: ee
 
   ## https://docs.gitlab.com/charts/charts/globals#gitlab-version
-  gitlabVersion: "17.11.2"
+  gitlabVersion: "18.0.0"
 
   ## https://docs.gitlab.com/charts/charts/globals#application-resource
   application:
@@ -64,13 +64,13 @@ global:
     hostSuffix:
     https: true
     externalIP:
-    ssh: gitlab.fck8slab.local
-    gitlab:
-      name: gitlab.fck8slab.local
-      https: true  
+    ssh:
+    gitlab: {}
     minio: {}
     registry: {}
     tls: {}
+    #  enabled: true
+    #  secretName: tls-gitlab
     smartcard: {}
     kas: {}
     pages: {}
@@ -78,15 +78,16 @@ global:
   ## https://docs.gitlab.com/charts/charts/globals#configure-ingress-settings
   ingress:
     apiVersion: ""
-    configureCertmanager: true
+    #configureCertmanager: true
+    configureCertmanager: false
     useNewIngressForCerts: false
     provider: nginx
-    # class:
+    class: nginx
     annotations: {}
     enabled: true
-    tls: {}
-    #   enabled: true
-    #   secretName:
+    tls:
+      enabled: true
+      secretName: gitlab-tls
     path: /
     pathType: Prefix
 
@@ -250,8 +251,8 @@ global:
     usernameChangingEnabled: true
     issueClosingPattern:
     defaultTheme:
-    defaultColorMode: 
-    defaultSyntaxHighlightingTheme: 
+    defaultColorMode:
+    defaultSyntaxHighlightingTheme:
     defaultProjectsFeatures:
       issues: true
       mergeRequests: true
@@ -269,7 +270,7 @@ global:
       #   cron: "0 * * * *"
       ## Schedule pipelines in the near future
       # pipeline_schedule_worker:
-      #   cron: "19 * * * *"
+      #   cron: "3-59/10 * * * *"
       ## Remove expired build artifacts
       # expire_build_artifacts_worker:
       #   cron: "*/7 * * * *"
@@ -947,28 +948,30 @@ upgradeCheck:
       cpu: 50m
   priorityClassName: ""
 
-## Settings to for the Let's Encrypt ACME Issuer
-certmanager-issuer:
-  # The email address to register certificates requested from Let's Encrypt.
-  # Required if using Let's Encrypt.
-  #email: email@example.com
-  email: fc.raylin9981@gmail.com
+## Settings for the Let's Encrypt ACME Issuer
+#certmanager-issuer:
+#  # The email address to register certificates requested from Let's Encrypt.
+#  # Required if using Let's Encrypt.
+#  email: fc.raylin9981@gmail.com
 
-## Installation & configuration of jetstack/cert-manager
+
+## Installation of certmananger.
+## This value replaces `certmanager.install` to allow certmanager schema validation to pass.
 ## See requirements.yaml for current version
-certmanager:
-  #installCRDs: true
-  installCRDs: false
-  nameOverride: certmanager
-  # Install cert-manager chart. Set to false if you already have cert-manager
-  # installed or if you are not using cert-manager.
-  #install: true
-  install: false
-  # Other cert-manager configurations from upstream
-  # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
-  rbac:
-    create: true
+#installCertmanager: true
+installCertmanager: false
 
+## Configuration of jetstack/cert-manager
+certmanager:
+  install: false
+#  installCRDs: true
+#  #installCRDs: false
+#  nameOverride: certmanager
+#  # Other cert-manager configurations from upstream
+#  # See https://github.com/jetstack/cert-manager/blob/master/deploy/charts/cert-manager/README#configuration
+#  rbac:
+#    create: true
+#
 ## https://docs.gitlab.com/charts/charts/nginx/
 ## https://docs.gitlab.com/charts/architecture/decisions#nginx-ingress
 ## Installation & configuration of charts/ingress-nginx:
@@ -1076,20 +1079,16 @@ prometheus:
     create: true
   alertmanager:
     enabled: false
-  alertmanagerFiles:
-    alertmanager.yml: {}
-  kubeStateMetrics:
+  kube-state-metrics:
     enabled: false
-  nodeExporter:
+  prometheus-node-exporter:
     enabled: false
-  pushgateway:
+  prometheus-pushgateway:
     enabled: false
   server:
     retention: 15d
     strategy:
       type: Recreate
-    image:
-      tag: v2.38.0
     containerSecurityContext:
       runAsUser: 1000
       allowPrivilegeEscalation: false
@@ -1265,7 +1264,7 @@ postgresql:
       adminPasswordKey: postgresql-postgres-password
       userPasswordKey: '{{ include "gitlab.psql.password.key" $ }}'
   image:
-    tag: 14.8.0
+    tag: 16.6.0
   primary:
     initdb:
       scriptsConfigMap: '{{ include "gitlab.psql.initdbscripts" $}}'

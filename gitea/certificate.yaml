@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: gitea-cert
+  namespace: gitea-system
+spec:
+  commonName: fck8slab.local
+  secretName: gitea-cert
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: fck8slab-ca-issuer
+    kind: ClusterIssuer
+    group: cert-manager.io

@@ -1,0 +1,46 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: fck8slab-ca-issuer
+    field.cattle.io/publicEndpoints: '[{"addresses":["192.168.147.61","192.168.147.62","192.168.147.63","192.168.147.64"],"port":443,"protocol":"HTTPS","serviceName":"gitea-system:gitea-http","ingressName":"gitea-system:gitea","hostname":"gitea.fck8slab.local","path":"/","allNodes":false}]'
+    meta.helm.sh/release-name: gitea
+    meta.helm.sh/release-namespace: gitea-system
+  creationTimestamp: "2025-05-15T06:46:39Z"
+  generation: 2
+  labels:
+    app: gitea
+    app.kubernetes.io/instance: gitea
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: gitea
+    app.kubernetes.io/version: 1.23.6
+    helm.sh/chart: gitea-11.0.1
+    version: 1.23.6
+  name: gitea
+  namespace: gitea-system
+  resourceVersion: "5358819"
+  uid: c3624a86-747d-49a9-b49a-a9d432593853
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: gitea.fck8slab.local
+    http:
+      paths:
+      - backend:
+          service:
+            name: gitea-http
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - gitea.fck8slab.local
+    secretName: gitea-cert
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.147.61
+    - ip: 192.168.147.62
+    - ip: 192.168.147.63
+    - ip: 192.168.147.64
