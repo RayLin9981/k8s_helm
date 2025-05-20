@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: keycloak
   namespace: keycloak-system
-  annotations:
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"  # 將 HTTP 重定向到 HTTPS
+  annotations: 
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
   rules:
@@ -18,3 +18,7 @@ spec:
             name: keycloak
             port:
               number: 80
+#  tls:
+#  - hosts:
+#    - keycloak.fck8slab.local
+#    secretName: tls-keycloak-ingress
