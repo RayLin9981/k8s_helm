@@ -244,6 +244,25 @@ global:
   appConfig:
     ## https://docs.gitlab.com/charts/charts/globals#general-application-settings
     # cdnHost:
+    ldap:
+      preventSignin: false
+      servers:
+        # 'main' is the GitLab 'provider ID' of this LDAP server
+        main:
+          label: 'LDAP'
+          host: 'ad.fck8slab.local'
+          port: 389
+          uid: 'name'
+          bind_dn: 'CN=ray,CN=Users,DC=fck8slab,DC=local'
+          base: 'CN=Users,DC=fck8slab,DC=local'
+          verify_certificates: false
+          lowercase_usernames: false
+          retry_empty_result_with_codes: [80]
+          allow_username_or_email_login: true
+          block_auto_created_users: false
+          password:
+            secret: my-ldap-password-secret
+            key: password
     enableUsagePing: true
     enableSeatLink: true
     enableImpersonation:
@@ -480,11 +499,6 @@ global:
         # key:
 
     ## https://docs.gitlab.com/charts/charts/globals#ldap
-    ldap:
-      # prevent the use of LDAP for sign-in via web.
-      preventSignin: false
-      servers: {}
-      ## See documentation for complete example of a configured LDAP server
 
     duoAuth:
       enabled: false
@@ -740,8 +754,8 @@ global:
   ## Secret created according to https://docs.gitlab.com/charts/installation/secrets#gitlab-runner-secret
   ## If allowing shared-secrets generation, this is OPTIONAL.
   runner:
-    registrationToken: {}
-      # secret:
+    registrationToken:  {}
+      #secret: gitlab-runner-secret
 
   ## https://docs.gitlab.com/charts/charts/globals#outgoing-email
   ## Outgoing email server settings
@@ -811,7 +825,7 @@ global:
     serviceName: webservice-default
     # scheme:
     # host:
-    # port:
+    #port: 30443
     ## https://docs.gitlab.com/charts/installation/secrets#gitlab-workhorse-secret
     # secret:
     # key:
@@ -1337,6 +1351,7 @@ shared-secrets:
 ## See requirements.yaml for current version
 gitlab-runner:
   install: true
+  certsSecretName: gitlab.fck8slab.local.crt
   rbac:
     create: true
   runners:
@@ -1346,8 +1361,9 @@ gitlab-runner:
     secret: "nonempty"
     config: |
       [[runners]]
+        url = "gitlab.fck8slab.local"
         [runners.kubernetes]
-        image = "ubuntu:22.04"
+        image = "docker.io/library/docker:28.2.0-rc.1-dind-alpine3.21"
         {{- if .Values.global.minio.enabled }}
         [runners.cache]
           Type = "s3"
@@ -1365,6 +1381,7 @@ gitlab-runner:
   podSecurityContext:
     seccompProfile:
       type: "RuntimeDefault"
+  
 
 traefik:
   install: false
