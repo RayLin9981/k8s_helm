@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 2-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 2-test
+  template:
+    metadata:
+      labels:
+        app: 2-test
+    spec:
+      containers:
+      - image: docker.io/nvidia/cuda:12.9.0-cudnn-devel-ubuntu24.04
+        name: 2-test
+        command: ["/bin/sh"]
+        args: ["-c", "sleep infinity"]
+        tty: true
+        stdin: true
+        resources:
+          limits:
+            nvidia.com/gpu: "1"
+          requests:
+            nvidia.com/gpu: "1"
+      dnsPolicy: ClusterFirst

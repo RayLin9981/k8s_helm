@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: 4-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: 4-test
+  template:
+    metadata:
+      labels:
+        app: 4-test
+    spec:
+      containers:
+      - image: ubuntu
+        name: 4-test
+        command: ["/bin/sh"]
+        args: ["-c", "sleep infinity"]
+        tty: true
+        stdin: true
+        resources: {}
+#          limits:
+#            nvidia.com/gpu: "1"
+#          requests:
+#            nvidia.com/gpu: "1"
+      dnsPolicy: ClusterFirst
