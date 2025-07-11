@@ -1,0 +1,5 @@
+apiVersion: v2
+name: phpipam
+description: A Helm chart to deploy phpIPAM with Ingress
+version: 0.1.0
+appVersion: "1.5"

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rook-ceph-mgr-dashboard-ingress
+  namespace: rook-ceph
+spec:
+  ingressClassName: nginx   # 請根據你的 ingress controller 調整
+  rules:
+  - host: ceph.fck8slab.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rook-ceph-mgr-dashboard
+            port:
+              number: 7000
+

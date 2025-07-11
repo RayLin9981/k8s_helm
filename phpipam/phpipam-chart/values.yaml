@@ -1,0 +1,36 @@
+replicaCount: 1
+
+image:
+  repository: harbor.fck8slab.local/fck8slab/phpipam-with-ca
+  tag: "20250702"
+  pullPolicy: IfNotPresent
+
+mariadb:
+  image: mariadb
+  tag: 10.5
+  user: phpipam
+  password: phpipam
+  rootPassword: '1qaz!QAZ'
+  database: phpipam
+  port: 3306
+  storage: 1Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  host: phpipam.fck8slab.local
+  tls:
+    enabled: false
+    secretName: phpipam-tls
+    issuerRef:
+      name: fck8slab-ca-issuer
+      kind: ClusterIssuer
+  sslRedirect: false
+
+service:
+  type: ClusterIP
+  port: 80
+
+trustRootCA:
+  enabled: true
+  secretName: phpipam-tls

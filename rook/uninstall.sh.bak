@@ -1,0 +1,24 @@
+#!/bin/bash
+# helm
+helm uninstall -n rook-ceph rook-ceph
+helm -n rook-ceph uninstall rook-ceph-cluster
+#
+kubectl delete -n rook-ceph cm,secret --all --wait=false
+kubectl -n rook-ceph patch configmap/rook-ceph-mon-endpoints secret/rook-ceph-mon   -p '{"metadata":{"finalizers":[]}}' --type=merge 
+# 
+kubectl --namespace rook-ceph delete cephcluster rook-ceph --wait=false
+kubectl -n rook-ceph delete CephObjectStore ceph-objectstore --wait=false
+kubectl -n rook-ceph delete CephFilesystem ceph-filesystem --wait=false
+kubectl -n rook-ceph delete CephBlockPool ceph-blockpool  --wait=false
+kubectl -n rook-ceph delete CephBlockPool rook-ceph --wait=false
+kubectl -n rook-ceph patch cephcluster/rook-ceph CephBlockPool/rook-ceph CephBlockPool/ceph-blockpool CephObjectStore/ceph-objectstore  CephFilesystem/ceph-filesystem -p '{"metadata":{"finalizers":[]}}' --type=merge
+# crd
+kubectl delete -f /root/k8s_helm/rook/rook/deploy/examples/crds.yaml --wait=false
+
+kubectl  patch  crd cephfilesystemsubvolumegroups.ceph.rook.io cephclusters.ceph.rook.io -p '{"metadata":{"finalizers":[]}}' --type=merge
+
+# k delete ns rook-ceph
+
+# sudo rm -rf /var/lib/rook
+# ssh dgx-w1 rm -rf /var/lib/rook
+# ssh dgx1 rm -rf /var/lib/rook

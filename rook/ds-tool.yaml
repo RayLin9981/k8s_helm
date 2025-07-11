@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: ceph-tools
+  namespace: rook-ceph
+spec:
+  selector:
+    matchLabels:
+      app: ceph-tools
+  template:
+    metadata:
+      labels:
+        app: ceph-tools
+    spec:
+      tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+      - effect: NoExecute
+        key: node.kubernetes.io/not-ready
+        operator: Exists
+        tolerationSeconds: 300
+      - effect: NoExecute
+        key: node.kubernetes.io/unreachable
+        operator: Exists
+        tolerationSeconds: 5
+      - key: storage-node
+        operator: Exists
+      hostPID: true                      # 讓 Pod 能用 host PID namespace（方便調試）
+      hostNetwork: true                  # 使用 host network
+      nodeSelector:
+        role: storage-node              # 你可依你的節點 label 修改
+      containers:
+      - name: ceph-tools
+        image: ceph/ceph:v16            # 官方 Ceph docker image，內含 ceph-bluestore-tool
+        securityContext:
+          privileged: true               # 需要特權權限以操作磁碟
+        command: ["/bin/sleep","infinity"]  # Pod 持續運作
+        volumeMounts:
+        - mountPath: /dev
+          name: dev
+        - mountPath: /sys
+          name: sys
+        - mountPath: /run/udev
+          name: run-udev
+        - mountPath: /etc/ceph
+          name: ceph-conf
+      volumes:
+      - name: dev
+        hostPath:
+          path: /dev
+      - name: sys
+        hostPath:
+          path: /sys
+      - name: run-udev
+        hostPath:
+          path: /run/udev
+      - name: ceph-conf
+        hostPath:
+          path: /etc/ceph
+      restartPolicy: Always
+

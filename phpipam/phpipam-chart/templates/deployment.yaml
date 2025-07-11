@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: phpipam
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: phpipam
+  template:
+    metadata:
+      labels:
+        app: phpipam
+    spec:
+      containers:
+      - name: phpipam
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- if .Values.trustRootCA.enabled }}
+        volumeMounts:
+        - name: certs
+          mountPath: /etc/ssl/certs
+        {{- end }}
+        env:
+        - name: IPAM_DATABASE_HOST
+          value: mariadb
+        - name: IPAM_DATABASE_USER
+          value: {{ .Values.mariadb.user }}
+        - name: IPAM_DATABASE_PASS
+          value: {{ .Values.mariadb.password }}
+        - name: IPAM_DATABASE_NAME
+          value: {{ .Values.mariadb.database }}
+        - name: IPAM_DATABASE_PORT
+          value: "{{ .Values.mariadb.port }}"
+        - name: IPAM_BASE
+          value: "/"
+        - name: TZ
+          value: "Asia/Taipei"
+        - name: IPAM_FOOTER_MESSAGE 
+          value: "RAYyyyy"
+        ports:
+        - containerPort: 80
+      {{- if .Values.trustRootCA.enabled }}
+      volumes:
+      - name: rootca
+        secret:
+          secretName: {{ .Values.trustRootCA.secretName }}
+      - name: certs
+        emptyDir: {}
+      {{- end }}

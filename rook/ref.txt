@@ -1,0 +1,7 @@
+kubectl -n rook-ceph get secret rook-ceph-dashboard-password -o jsonpath="{['data']['password']}" | base64 --decode && echo
+
+
+#sudo wipefs -a /dev/sdb
+#sudo dd if=/dev/zero of=/dev/sdb bs=1M count=10
+
+k label node bcm11-headnode dgx1 dgx-w1 role="storage-node"

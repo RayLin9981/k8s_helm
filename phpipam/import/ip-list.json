@@ -1,0 +1,103 @@
+[
+  {
+    "ip": "192.168.147.50",
+    "hostname": "openVPN",
+    "description": "VPN server"
+  },
+  {
+    "ip": "192.168.147.51",
+    "hostname": "k8s1",
+    "description": "k8s master1 (kenny test)"
+  },
+  {
+    "ip": "192.168.147.52",
+    "hostname": "k8s2",
+    "description": "k8s worker (kenny test)"
+  },
+  {
+    "ip": "192.168.147.53",
+    "hostname": "bastion",
+    "description": "K8S Lab 跳板機/操作台 / DGX-1 Lab Gateway"
+  },
+  {
+    "ip": "192.168.147.54",
+    "hostname": "k8sm1",
+    "description": "K8S Lab Master"
+  },
+  {
+    "ip": "192.168.147.55",
+    "hostname": "k8sw1",
+    "description": "K8S Lab Worker 1"
+  },
+  {
+    "ip": "192.168.147.56",
+    "hostname": "k8sw2",
+    "description": "K8S Lab Worker 2"
+  },
+  {
+    "ip": "192.168.147.58",
+    "hostname": "bastion2",
+    "description": "備用- 跳板機/操作台"
+  },
+  {
+    "ip": "192.168.147.59",
+    "hostname": "proxy-arp",
+    "description": "讓 DGX-1 Lab 可以使用 192.168.147.x 的 IP"
+  },
+  {
+    "ip": "192.168.147.60",
+    "hostname": "ray-rke-1",
+    "description": "rancher, rke2 測試節點"
+  },
+  {
+    "ip": "192.168.147.71",
+    "hostname": "ray-bastion-k8s",
+    "description": "Ray 連線 k8s 使用"
+  },
+  {
+    "ip": "192.168.147.78",
+    "hostname": "harbor",
+    "description": "內部 harbor 服務 (harbor.fck8slab.local)"
+  },
+  {
+    "ip": "192.168.147.79",
+    "hostname": "workstation",
+    "description": "AD/DNS/NTP Server"
+  },
+  {
+    "ip": "192.168.147.151",
+    "hostname": "DGX-1 BMC",
+    "description": "BMC 管理介面"
+  },
+  {
+    "ip": "192.168.147.152",
+    "hostname": "zimbra-mail",
+    "description": "Mail Server (測試用)"
+  },
+  {
+    "ip": "192.168.147.154",
+    "hostname": "node1",
+    "description": "ubuntu 24.04 臨時測試主機"
+  },
+  {
+    "ip": "192.168.147.155",
+    "hostname": "node2",
+    "description": "ubuntu 24.04 臨時測試主機"
+  },
+  {
+    "ip": "192.168.147.199",
+    "hostname": "nas-old",
+    "description": "台南 NAS (舊機, 備份用)"
+  },
+  {
+    "ip": "192.168.147.238",
+    "hostname": "fongcon",
+    "description": "PVE Server (Dell)"
+  },
+  {
+    "ip": "192.168.147.239",
+    "hostname": "pve2",
+    "description": "PVE Server (SuperMicro)"
+  }
+]
+
