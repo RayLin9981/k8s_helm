@@ -1,0 +1,3 @@
+k apply -f plan.yaml
+k label node ray-rke2-1 ray-rke2-2 ray-rke2-3 ray-rke2-agent-1 rke2-upgrade=true --overwrite
+k label node ray-rke2-1 ray-rke2-2 ray-rke2-3 ray-rke2-agent-1 rke2-upgrade=false --overwrite
